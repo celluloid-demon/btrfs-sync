@@ -5,7 +5,7 @@ Smart and easy sync of BTRFS snapshots, locally or through SSH.
 
 ![Example](resources/btrfs-sync.gif)
 
-Can be used in conjunction with [btrfs-snp](https://ownyourbits.com/2017/12/27/schedule-btrfs-snapshots-with-btrfs-snp/)
+Can be used in conjunction with [btrfs-snp](https://web.archive.org/web/20220531110945/https://ownyourbits.com/2017/12/27/schedule-btrfs-snapshots-with-btrfs-snp/)
 
 ```log
 # btrfs-sync --verbose --delete /home/user/.snapshots user@server:/media/USBdrive/home-snapshots
