@@ -9,7 +9,7 @@
 # SOURCE="/home/.snapshots"
 # DESTINATION="btrfs@raspberry-pi:/backups/my-device/snapshots"
 #
-# /usr/loca/bin/btrfs-sync --delete --quiet "${SOURCE}/" "${DESTINATION}/"
+# /usr/local/bin/btrfs-sync --delete --quiet "${SOURCE}/" "${DESTINATION}/"
 
 ##############################################
 #                                            #
