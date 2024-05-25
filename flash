@@ -1,0 +1,106 @@
+#!/bin/bash
+
+# Exit on error
+set -e
+
+# Declare constants
+
+APP_DIR="$(dirname "$0")"
+
+APP_BIN="${APP_DIR}/usr/local/bin"
+APP_RESOURCES="${APP_DIR}/resources"
+APP_UNITS="${APP_DIR}/etc/systemd/system"
+
+SYSTEM_BIN="/usr/local/bin"
+SYSTEM_UNITS="/etc/systemd/system"
+
+TIMER="btrfs-sync.timer"
+SERVICE="btrfs-sync.service"
+
+EXEC="btrfs-sync"
+WRAPPER="btrfs-sync-wrapper"
+
+OS="$(uname --all)"
+
+# Initialize flags with default values
+FLAG_os_is_steamos=0
+
+if echo "$OS" | grep -q steam; then
+
+    FLAG_os_is_steamos=1
+
+fi
+
+# Initialize working copies of unit files if missing (you'll configure these working copies then flash them to the system)
+
+if [ ! -f "${APP_UNITS}/${TIMER}" ]; then
+
+    mkdir -p "${APP_UNITS}"
+    cp "${APP_RESOURCES}/${TIMER}"* "${APP_UNITS}/${TIMER}"
+
+fi
+
+if [ ! -f "${APP_UNITS}/${SERVICE}" ]; then
+
+    mkdir -p "${APP_UNITS}"
+    cp "${APP_RESOURCES}/${SERVICE}"* "${APP_UNITS}/${SERVICE}"
+
+fi
+
+if [ ! -f "${APP_BIN}/${WRAPPER}" ]; then
+
+    mkdir -p "${APP_BIN}"
+    cp "${APP_RESOURCES}/${WRAPPER}"* "${APP_BIN}/${WRAPPER}"
+
+fi
+
+
+# *for steamos system compatability
+
+if [ $FLAG_os_is_steamos -eq 1 ]; then
+
+    sudo steamos-readonly disable
+
+fi
+
+# "Flash" the timer file (copy configured unit file to system)
+
+# NOTE: Can't seem to get my own unit files to autostart as symlinks, hence 'cp' rather than 'ln -s'...
+
+sudo cp "${APP_UNITS}/${TIMER}" "${SYSTEM_UNITS}/"
+
+# "Flash" the service file (copy configured unit file to system)
+
+sudo cp "${APP_UNITS}/${SERVICE}" "${SYSTEM_UNITS}/"
+
+# "Flash" executable files themselves
+
+sudo cp "${APP_BIN}/${WRAPPER}" "${SYSTEM_BIN}/"
+sudo cp "${APP_BIN}/${EXEC}" "${SYSTEM_BIN}/"
+
+if [ $FLAG_os_is_steamos -eq 1 ]; then
+
+    sudo steamos-readonly enable
+
+fi
+
+# Verify unit files
+systemd-analyze verify "${SYSTEM_UNITS}/${TIMER}"
+systemd-analyze verify "${SYSTEM_UNITS}/${SERVICE}"
+
+# Start and enable timer
+
+set +e
+sudo systemctl enable "$TIMER"
+sudo systemctl status "$TIMER"
+set -e
+
+echo
+echo "  ######################################################################"
+echo "  #                                                                    #"
+echo "  #     NOTE: Timer enabled at boot, but not started to give you a     #"
+echo "  #           chance to configure things (re-flash to update           #"
+echo "  #           system unit files).                                      #"
+echo "  #                                                                    #"
+echo "  ######################################################################"
+echo

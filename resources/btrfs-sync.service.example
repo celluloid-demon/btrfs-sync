@@ -1,0 +1,5 @@
+[Unit]
+Description="btrfs-sync-wrapper service unit file"
+
+[Service]
+ExecStart="/usr/local/bin/btrfs-sync-wrapper"

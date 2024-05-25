@@ -1,0 +1,9 @@
+[Unit]
+Description="Run btrfs-sync (wrapper) script hourly"
+
+[Timer]
+OnCalendar=*-*-* *:00:00
+Unit=btrfs-sync.service
+
+[Install]
+WantedBy=multi-user.target

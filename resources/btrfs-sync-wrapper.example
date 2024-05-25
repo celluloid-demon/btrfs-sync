@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#############################
+#                           #
+#          EXAMPLE          #
+#                           #
+#############################
+
+# SOURCE="/home/.snapshots"
+# DESTINATION="btrfs@raspberry-pi:/backups/my-device/snapshots"
+#
+# /usr/loca/bin/btrfs-sync --delete --quiet "${SOURCE}/" "${DESTINATION}/"
+
+##############################################
+#                                            #
+#          BEGIN USER CONFIGURATION          #
+#                                            #
+##############################################
